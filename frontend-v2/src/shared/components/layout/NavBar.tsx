@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib';
+import { ConnectWalletButton } from '@/src/shared/components/ConnectWalletButton';
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,6 +38,7 @@ export const Navbar = () => {
                 {link.label}
               </Link>
             ))}
+            <ConnectWalletButton />
           </div>
 
           {/* Mobile Menu Button */}
@@ -86,6 +88,9 @@ export const Navbar = () => {
               {link.label}
             </Link>
           ))}
+          <div className="px-3 py-4">
+            <ConnectWalletButton />
+          </div>
         </div>
       </div>
     </nav>
