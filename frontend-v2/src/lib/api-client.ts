@@ -28,27 +28,30 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 10_000);
 
-  const response = await fetch(`${BASE_URL}${path}`, {
-    ...init,
-    headers,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
-    signal: controller.signal,
-  });
-  clearTimeout(timeoutId);
+  try {
+    const response = await fetch(`${BASE_URL}${path}`, {
+      ...init,
+      headers,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+      signal: controller.signal,
+    });
 
-  if (response.status === 401) {
-    const { authService } = await import('@/src/features/auth/services/auth.service');
-    authService.logout();
-    window.location.href = '/login?reason=session_expired';
-    throw new Error('Session expired');
+    if (response.status === 401) {
+      const { authService } = await import('@/src/features/auth/services/auth.service');
+      authService.logout();
+      window.location.href = '/login?reason=session_expired';
+      throw new Error('Session expired');
+    }
+
+    if (!response.ok) {
+      const message = await response.text().catch(() => '');
+      throw new Error(message || `Request failed with status ${response.status}`);
+    }
+
+    return response.json() as Promise<T>;
+  } finally {
+    clearTimeout(timeoutId);
   }
-
-  if (!response.ok) {
-    const message = await response.text().catch(() => '');
-    throw new Error(message || `Request failed with status ${response.status}`);
-  }
-
-  return response.json() as Promise<T>;
 }
 
 export const apiClient = {
