@@ -13,6 +13,9 @@ export default function Providers({
 }) {
   return (
     <QueryClientProvider client={queryClient}>
+      <WalletProvider>
+        <ToastProvider>{children}</ToastProvider>
+      </WalletProvider>
       <ToastProvider>{children}</ToastProvider>
       {/* Devtools panel — tree-shaken out of production builds automatically */}
       <ReactQueryDevtools initialIsOpen={false} />
