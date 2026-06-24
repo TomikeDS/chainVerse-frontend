@@ -38,9 +38,9 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
 
   if (response.status === 401) {
     const { authService } = await import('@/src/features/auth/services/auth.service');
-    await authService.logout();
-    window.location.href = '/login';
-    throw new Error('Session expired. Please log in again.');
+    authService.logout();
+    window.location.href = '/login?reason=session_expired';
+    throw new Error('Session expired');
   }
 
   if (!response.ok) {
