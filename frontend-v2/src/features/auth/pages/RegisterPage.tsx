@@ -5,7 +5,10 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { AuthForm } from '../components/AuthForm';
+import { authService } from '../services/auth.service';
 
 const registerSchema = z
   .object({
@@ -30,6 +33,8 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 export const RegisterPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const router = useRouter();
 
   const {
     register,
@@ -39,8 +44,14 @@ export const RegisterPage: React.FC = () => {
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = (data: RegisterFormData) => {
-    console.log('Register form data:', data);
+  const onSubmit = async (data: RegisterFormData) => {
+    setApiError(null);
+    try {
+      await authService.register({ name: data.fullName, email: data.email, password: data.password });
+      router.replace('/dashboard');
+    } catch {
+      setApiError('Registration failed. Please try again.');
+    }
   };
 
   return (
@@ -49,12 +60,18 @@ export const RegisterPage: React.FC = () => {
       subtitle="Join ChainVerse and start learning"
       onSubmit={handleSubmit(onSubmit)}
     >
+      {apiError && (
+        <div role="alert" className="px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
+          {apiError}
+        </div>
+      )}
       {/* Full Name */}
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+        <label htmlFor="fullName" className="block text-sm font-semibold text-gray-700 mb-2">
           Full Name
         </label>
         <input
+          id="fullName"
           type="text"
           placeholder="John Doe"
           className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 transition ${
@@ -71,12 +88,14 @@ export const RegisterPage: React.FC = () => {
 
       {/* Email */}
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+        <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
           Email Address
         </label>
         <input
+          id="email"
           type="email"
           placeholder="you@example.com"
+          autoComplete="email"
           className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 transition ${
             errors.email
               ? 'border-red-300 focus-visible:ring-red-500'
@@ -91,13 +110,15 @@ export const RegisterPage: React.FC = () => {
 
       {/* Password */}
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+        <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
           Password
         </label>
         <div className="relative">
           <input
+            id="password"
             type={showPassword ? 'text' : 'password'}
             placeholder="••••••••"
+            autoComplete="new-password"
             className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 transition pr-12 ${
               errors.password
                 ? 'border-red-300 focus-visible:ring-red-500'
@@ -107,6 +128,7 @@ export const RegisterPage: React.FC = () => {
           />
           <button
             type="button"
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 rounded"
           >
@@ -120,11 +142,12 @@ export const RegisterPage: React.FC = () => {
 
       {/* Confirm Password */}
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+        <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-2">
           Confirm Password
         </label>
         <div className="relative">
           <input
+            id="confirmPassword"
             type={showConfirm ? 'text' : 'password'}
             placeholder="••••••••"
             className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 transition pr-12 ${
@@ -136,6 +159,7 @@ export const RegisterPage: React.FC = () => {
           />
           <button
             type="button"
+            aria-label={showConfirm ? 'Hide password' : 'Show password'}
             onClick={() => setShowConfirm(!showConfirm)}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 rounded"
           >
@@ -166,9 +190,9 @@ export const RegisterPage: React.FC = () => {
       {/* Login Link */}
       <p className="text-center text-gray-600 text-sm">
         Already have an account?{' '}
-        <a href="/auth/login" className="text-blue-600 hover:text-blue-700 font-semibold">
+        <Link href="/auth/login" className="text-blue-600 hover:text-blue-700 font-semibold">
           Sign in
-        </a>
+        </Link>
       </p>
     </AuthForm>
   );
