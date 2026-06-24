@@ -1,7 +1,7 @@
-import { HeroSection } from '@/src/shared/shared/HeroSection'
+import HeroSection from '@/src/shared/HeroSection'
 import { Features } from './sections/Features/Features'
-import { FeaturedCourses } from '@/src/shared/shared/FeaturedCourses'
-import { Footer } from '@/src/shared/shared/Footer'
+import FeaturedCourses from '@/src/shared/FeaturedCourses'
+import Footer from '@/src/shared/Footer'
 
 export function LandingPage() {
   return (
