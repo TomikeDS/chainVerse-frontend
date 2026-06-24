@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import { BookOpen, Clock, Trophy, TrendingUp } from "lucide-react";
 import { UserActivityChart } from "../components/UserActivityChart";
