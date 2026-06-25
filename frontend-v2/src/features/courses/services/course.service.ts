@@ -1,4 +1,4 @@
-import { apiClient } from '@/lib/api-client';
+import { apiClient } from '@/src/lib/api-client';
 import type { Course, CourseListResponse, CoursePayload } from '../types';
 
 export const courseService = {
