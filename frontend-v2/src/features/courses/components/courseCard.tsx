@@ -103,7 +103,7 @@ export function CourseCard({
           <p className="text-xs text-gray-600">By {instructor}</p>
           <div className="flex items-center gap-1">
             <div className="flex gap-0.5" aria-hidden="true">{renderStars()}</div>
-            <span className="sr-only">Rating: {rating} out of 5 stars</span>
+            <span className="sr-only">Rated {rating} out of 5 stars</span>
             <span className="text-xs font-semibold text-gray-700 ml-1" aria-hidden="true">{rating}</span>
           </div>
         </div>
