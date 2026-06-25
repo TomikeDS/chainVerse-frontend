@@ -38,7 +38,7 @@ export const authService = {
     } catch {
       // Intentionally swallowed — client logout must always complete.
     } finally {
-      clearSessionCookie();
+      localStorage.removeItem(TOKEN_EXPIRY_KEY);
     }
   },
 

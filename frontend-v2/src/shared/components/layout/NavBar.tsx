@@ -16,6 +16,8 @@ export const Navbar = () => {
     { href: '/students', label: 'Students' },
   ];
 
+  const network = process.env.NEXT_PUBLIC_STELLAR_NETWORK;
+
   return (
     <nav className="bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,6 +27,11 @@ export const Navbar = () => {
             <Link href="/" className="text-xl font-bold text-blue-600">
               Stellar
             </Link>
+            {network === 'testnet' && (
+              <span className="ml-2 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">
+                TESTNET
+              </span>
+            )}
           </div>
 
           {/* Desktop Navigation */}
