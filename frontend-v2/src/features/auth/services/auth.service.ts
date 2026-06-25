@@ -5,14 +5,6 @@ const TOKEN_EXPIRY_KEY = 'token_expiry';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/**
- * Clears the JS-accessible session indicator cookie on logout.
- * The HttpOnly auth cookie is cleared server-side via /api/auth/logout.
- */
-function clearSessionCookie(): void {
-  document.cookie = 'session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Strict';
-  localStorage.removeItem(TOKEN_EXPIRY_KEY);
-}
 
 // ─── Service ──────────────────────────────────────────────────────────────────
 
