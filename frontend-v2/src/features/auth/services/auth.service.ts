@@ -5,29 +5,17 @@ const TOKEN_EXPIRY_KEY = 'token_expiry';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/**
- * Clears the JS-accessible session indicator cookie on logout.
- * The HttpOnly auth cookie is cleared server-side via /api/auth/logout.
- */
-function clearSessionCookie(): void {
-  document.cookie = 'session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Strict';
-  localStorage.removeItem(TOKEN_EXPIRY_KEY);
-}
 
 // ─── Service ──────────────────────────────────────────────────────────────────
 
 export const authService = {
   login: async (payload: LoginPayload): Promise<AuthResponse> => {
     const response = await apiClient.post<AuthResponse>('/api/auth/login', payload);
-    const expiresAt = Date.now() + response.expiresIn * 1000;
-    localStorage.setItem(TOKEN_EXPIRY_KEY, String(expiresAt));
     return response;
   },
 
   register: async (payload: RegisterPayload): Promise<AuthResponse> => {
     const response = await apiClient.post<AuthResponse>('/api/auth/register', payload);
-    const expiresAt = Date.now() + response.expiresIn * 1000;
-    localStorage.setItem(TOKEN_EXPIRY_KEY, String(expiresAt));
     return response;
   },
 
@@ -50,7 +38,7 @@ export const authService = {
     } catch {
       // Intentionally swallowed — client logout must always complete.
     } finally {
-      clearSessionCookie();
+      localStorage.removeItem(TOKEN_EXPIRY_KEY);
     }
   },
 
