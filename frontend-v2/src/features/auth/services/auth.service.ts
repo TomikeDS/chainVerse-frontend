@@ -19,15 +19,11 @@ function clearSessionCookie(): void {
 export const authService = {
   login: async (payload: LoginPayload): Promise<AuthResponse> => {
     const response = await apiClient.post<AuthResponse>('/api/auth/login', payload);
-    const expiresAt = Date.now() + response.expiresIn * 1000;
-    localStorage.setItem(TOKEN_EXPIRY_KEY, String(expiresAt));
     return response;
   },
 
   register: async (payload: RegisterPayload): Promise<AuthResponse> => {
     const response = await apiClient.post<AuthResponse>('/api/auth/register', payload);
-    const expiresAt = Date.now() + response.expiresIn * 1000;
-    localStorage.setItem(TOKEN_EXPIRY_KEY, String(expiresAt));
     return response;
   },
 
