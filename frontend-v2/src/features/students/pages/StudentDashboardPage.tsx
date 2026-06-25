@@ -105,6 +105,38 @@ export const StudentDashboardPage: React.FC = () => {
           </div>
         )}
 
+        {/* Course Progress */}
+        {enrollments.length > 0 && (
+          <section aria-labelledby="course-progress-heading" className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-8">
+            <h2 id="course-progress-heading" className="text-lg font-semibold text-gray-900 mb-4">
+              Course Progress
+            </h2>
+            <ul className="space-y-4" aria-label="Enrolled course progress">
+              {enrollments.map((enrollment) => (
+                <li key={enrollment.courseId}>
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-sm font-medium text-gray-700">{enrollment.courseId}</span>
+                    <span className="text-sm text-gray-500" aria-hidden="true">{enrollment.progress}%</span>
+                  </div>
+                  <div
+                    role="progressbar"
+                    aria-valuenow={enrollment.progress}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-label={`${enrollment.courseId} progress`}
+                    className="w-full bg-gray-200 rounded-full h-2 overflow-hidden"
+                  >
+                    <div
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${enrollment.progress}%` }}
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-3">
