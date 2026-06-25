@@ -27,7 +27,7 @@ export const Navbar = () => {
           {/* Logo Section */}
           <div className="flex items-center">
             <Link href="/" className="text-xl font-bold text-blue-600">
-              Stellar
+              ChainVerse
             </Link>
             {network === 'testnet' && (
               <span className="ml-2 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">
