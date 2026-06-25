@@ -1,18 +1,38 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Menu, X, User, LogOut, Settings } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useAuthStore } from '@/src/store/authStore';
 
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const dropdownTriggerRef = useRef<HTMLButtonElement>(null);
+  const pathname = usePathname();
+  const { isAuthenticated, user, clearAuth } = useAuthStore();
 
-  const navLinks = [
-    { label: 'Courses', href: '/courses' },
-    { label: 'Instructors', href: '/instructors' },
-    { label: 'Dashboard', href: '/dashboard' },
-  ];
+  // Auto-close mobile menu on navigation
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
+  const navLinks = isAuthenticated
+    ? user?.role === 'instructor'
+      ? [
+          { label: 'Instructor Dashboard', href: '/instructors/dashboard' },
+          { label: 'Courses', href: '/courses' },
+        ]
+      : [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Courses', href: '/courses' },
+          { label: 'Wallet', href: '/wallet' },
+        ]
+    : [
+        { label: 'Courses', href: '/courses' },
+        { label: 'Login', href: '/login' },
+        { label: 'Register', href: '/register' },
+      ];
 
   const closeDropdown = useCallback(() => {
     setIsDropdownOpen(false);
@@ -127,6 +147,7 @@ export const Header: React.FC = () => {
                   <button
                     role="menuitem"
                     aria-label="Log out"
+                    onClick={clearAuth}
                     className="w-full flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 transition text-sm"
                   >
                     <LogOut size={16} aria-hidden="true" />
