@@ -80,6 +80,7 @@ export function CourseCard({
         >
           <Heart
             size={18}
+            aria-hidden="true"
             className={wishlisted ? 'fill-red-500 text-red-500' : 'text-gray-400'}
           />
         </button>
