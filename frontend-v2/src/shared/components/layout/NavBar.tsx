@@ -2,11 +2,13 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { cn } from '@/lib';
 import { ConnectWalletButton } from '@/src/shared/components/ConnectWalletButton';
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -33,7 +35,10 @@ export const Navbar = () => {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-gray-600 hover:text-blue-600 transition-colors font-medium"
+                className={cn(
+                  'text-gray-600 hover:text-blue-600 transition-colors font-medium',
+                  pathname === link.href && 'text-blue-600 font-semibold border-b-2 border-blue-600'
+                )}
               >
                 {link.label}
               </Link>
@@ -83,7 +88,10 @@ export const Navbar = () => {
               key={link.href}
               href={link.href}
               onClick={() => setIsOpen(false)}
-              className="block px-3 py-4 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+              className={cn(
+                'block px-3 py-4 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50',
+                pathname === link.href && 'text-blue-600 font-semibold bg-blue-50'
+              )}
             >
               {link.label}
             </Link>
